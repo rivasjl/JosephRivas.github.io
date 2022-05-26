@@ -1,3 +1,5 @@
 theme: jekyll-theme-midnight
 title: Joseph Rivas
 description: This is a portfolio that showcases my skills.
+github:
+  is_project_page: false
