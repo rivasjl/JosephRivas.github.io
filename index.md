@@ -134,3 +134,5 @@ MAX(total_cases) AS "Total Cases",
 (MAX(total_cases)::numeric(15,2)/population*100)::decimal(5,3) AS "Infection Rate"
 FROM coviddeaths
 GROUP BY location, population ORDER BY "Infection Rate" ASC;
+
+```
