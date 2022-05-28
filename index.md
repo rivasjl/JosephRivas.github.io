@@ -97,3 +97,40 @@ Snapshot of coviddeaths table
 Snapshot of covidvaccinations table
 ![image](https://user-images.githubusercontent.com/106350577/170804170-4f80febd-4521-4274-8d43-fdcba5278c3c.png)
 
+```
+* Which countries have the highest and lowest deathrate of covid 19?
+
+*Highest Deathrate
+SELECT location,
+max(total_cases) AS "Total Cases",
+max(total_deaths) AS "Total Deaths",
+(max(total_deaths)::numeric(15,2)/max(total_cases)*100)::decimal(5,2) AS "Death Rate"
+FROM coviddeaths
+GROUP BY location ORDER BY "Death Rate" DESC;
+
+* Lowest Deathrate
+SELECT location,
+max(total_cases) AS "Total Cases",
+max(total_deaths) AS "Total Deaths",
+(max(total_deaths)::numeric(15,2)/max(total_cases)*100)::decimal(5,2) AS "Death Rate"
+FROM coviddeaths
+GROUP BY location ORDER BY "Death Rate" ASC;
+
+* Which countries have the highest and lowest infection rate of covid 19?
+*Highest Infection Rate
+
+SELECT location,
+population,
+MAX(total_cases) AS "Total Cases",
+(MAX(total_cases)::numeric(15,2)/population*100)::decimal(5,3) AS "Infection Rate"
+FROM coviddeaths
+GROUP BY location, population ORDER BY "Infection Rate" DESC;
+
+*Lowest Infection Rate
+
+SELECT location,
+population,
+MAX(total_cases) AS "Total Cases",
+(MAX(total_cases)::numeric(15,2)/population*100)::decimal(5,3) AS "Infection Rate"
+FROM coviddeaths
+GROUP BY location, population ORDER BY "Infection Rate" ASC;
