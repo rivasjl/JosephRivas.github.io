@@ -1,14 +1,12 @@
-## COVID 19 Data Exploratory Analysis
+# Project 1: COVID 19 Data Exploratory Analysis
 ![image](https://user-images.githubusercontent.com/106350577/170791992-92d83b1b-58b5-4a3c-8ed2-c9f6ac420aae.png)
 The datasets that I will be using in my analysis come from our worldindata.org that tracks information about COVID 19 such as number of cases, deaths, vaccination count, etc...
 
-Link to the dataset: https://ourworldindata.org/covid-deaths
+[Datasets](https://ourworldindata.org/covid-deaths)
 
 Firstly, I will use SQL in order to manipulate the dataset in order to answer multiple questions. 
 
 Then, I will use Tableau to create a dashboard that is filled with visualizations of this dataset.
-
-Before I start anlyzing the dataset, I need to create a table first in order to define the columns and their respective data types to start importing.
 
 ```
 * Creating table 1 named CovidDeaths
@@ -92,13 +90,9 @@ SELECT *
 FROM covidvaccinations;
 
 ```
-Snapshot of coviddeaths table
-![image](https://user-images.githubusercontent.com/106350577/170803268-3a9c0611-146a-45e6-a5b2-d97f9062ee80.png)
-Snapshot of covidvaccinations table
-![image](https://user-images.githubusercontent.com/106350577/170804170-4f80febd-4521-4274-8d43-fdcba5278c3c.png)
 
 ```
-* Which countries have the highest and lowest deathrate of covid 19?
+* Which countries have the highest/lowest deathrate of covid 19?
 
 *Highest Deathrate
 SELECT location,
@@ -116,7 +110,7 @@ max(total_deaths) AS "Total Deaths",
 FROM coviddeaths
 GROUP BY location ORDER BY "Death Rate" ASC;
 
-* Which countries have the highest and lowest infection rate of covid 19?
+* Which countries have the highest/lowest infection rate of covid 19?
 *Highest Infection Rate
 
 SELECT location,
@@ -135,4 +129,63 @@ MAX(total_cases) AS "Total Cases",
 FROM coviddeaths
 GROUP BY location, population ORDER BY "Infection Rate" ASC;
 
+
+Which countries have the highest deathcount?
+SELECT distinct(location), 
+max(total_deaths) AS "Total Deaths"
+FROM coviddeaths
+WHERE continent is NOT NULL AND total_deaths is NOT NULL
+GROUP BY location ORDER BY "Total Deaths" DESC
+
+Which continents have the highest death count?
+SELECT location, 
+max(total_deaths) AS "Total Deaths"
+FROM coviddeaths
+WHERE continent is NULL AND total_deaths is NOT NULL
+GROUP BY location ORDER BY "Total Deaths", location DESC limit 8
+
+What is the global death rate?
+SELECT location, 
+max(total_deaths) AS "Total Deaths"
+FROM coviddeaths
+WHERE continent is NULL AND total_deaths is NOT NULL
+GROUP BY location ORDER BY "Total Deaths" DESC limit 1
+
+* Joining our two tables
+This query shows how vaccinations have been growing by dates.
+
+SELECT cdeath.continent,
+cdeath.location,
+cdeath.date,
+cdeath.population,
+vacc.new_vaccinations,
+SUM(new_vaccinations) OVER (PARTITION BY cdeath.location ORDER BY cdeath.location, cdeath.date) AS "Current Vaccinations"
+FROM coviddeaths as cdeath
+INNER JOIN covidvaccinations as vacc
+ON cdeath.location = vacc.location 
+AND cdeath.continent = vacc.continent
+AND cdeath.date = vacc.date
+WHERE new_vaccinations IS NOT NULL
+ORDER BY cdeath.location, cdeath.date
+
+Using a CTE, we can calculate how the percentage of vaccinations has changed. 
+WITH VacInfo (Continent, Location, Date, Population,New_vaccinations, "Current Vaccinations") AS 
+(
+SELECT cdeath.continent,
+cdeath.location,
+cdeath.date,
+cdeath.population,
+vacc.new_vaccinations,
+SUM(new_vaccinations) OVER (PARTITION BY cdeath.location ORDER BY cdeath.location, cdeath.date) AS "Current Vaccinations"
+FROM coviddeaths as cdeath
+INNER JOIN covidvaccinations as vacc
+ON cdeath.location = vacc.location 
+AND cdeath.continent = vacc.continent
+AND cdeath.date = vacc.date
+WHERE new_vaccinations IS NOT NULL
+ORDER BY cdeath.location, cdeath.date
+)
+SELECT *, (("Current Vaccinations")/Population*100)::numeric(5,2)
+FROM VacInfo
 ```
+# Project 2:
