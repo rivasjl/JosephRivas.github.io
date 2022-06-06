@@ -4,6 +4,19 @@ The datasets that I will be using in my analysis come from our worldindata.org t
 
 [Datasets](https://ourworldindata.org/covid-deaths)
 
-Firstly, I will use SQL in order to manipulate the dataset in order to answer multiple questions. 
+Firstly, I will use SQL in order to manipulate the dataset in order to answer a few questions that can be made from looking at the dataset. 
+These questions include:
 
-Then, I will use Tableau to create a dashboard that is filled with visualizations of this dataset.
+  1. Which countries have the highest amount of deaths?
+  2. Which countries have the highest death rate/vaccination rate?
+  3. How has vaccination rates changed over time?
+
+Some of the skills that I used in SQL are: Aggregate functions, CTEs, Joining Tablesand  Group/Sort By clause.
+
+Next, I will use R and more specifically, the ggplot2 package in R to create visualizations that display the information that we are looking.
+
+![image](https://user-images.githubusercontent.com/106350577/172233112-bd013176-53de-4550-b5a4-80912dee569a.png)
+
+
+
+
